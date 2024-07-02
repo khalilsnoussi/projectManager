@@ -32,7 +32,7 @@ export default function Home() {
                                     Calendrier
                                 </Typography>
                                 <Typography variant="h6" sx = {{fontWeight : 'bold'}}>
-                                    December 12
+                                    1er, Janvier 
                                 </Typography>
                             </Box>
                             <Divider/>
