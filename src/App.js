@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import LoginPage from './LoginPage';
+import Home from './Home';
+import Card from './MyCard';
+import Navbar from './Navbar';
+import svgImg from './image.svg';
+import FormDialog from './FormDialog';
+
+
+
+
 
 function App() {
+  const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClickClose = () => {
+        setOpen(false);
+    }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar handleClickOpen={handleClickOpen}/>
+      <Home/>
+      <FormDialog open={open} handleClose={handleClickClose}/>
+      
+    </>
   );
 }
 
