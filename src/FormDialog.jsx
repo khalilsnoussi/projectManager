@@ -6,24 +6,40 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Box from '@mui/material/Box';
 
 
 
 export default function FormDialog({open, handleClose}) {
+    const [selectedDate, setSelectedDate] = useState(null);
     return(
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{"programmer une tache"}</DialogTitle>
+            <DialogTitle>{"Programmer une tache"}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+                    choisir la tache ainsi que la date.
                 </DialogContentText>
+                <TextField/>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Box>
+                        <DatePicker
+                            label="Select Date"
+                            value={selectedDate}
+                            onChange={(newValue) => setSelectedDate(newValue)}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                    </Box>
+                </LocalizationProvider>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
-                    Cancel
+                    Fermer
                 </Button>
                 <Button onClick={handleClose} color="primary" autoFocus>
-                    Submit
+                    Envoyer
                 </Button>
             </DialogActions>
         </Dialog>

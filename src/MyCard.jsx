@@ -15,9 +15,9 @@ import IconButton from '@mui/material/IconButton';
 
 export default function MyCard() {
     return(
-        <Card variant = "outlined" sx = {{maxWidth : 360, bgcolor : '#26355D', color : 'white'}}>
+        <Card variant = "outlined" sx = {{maxWidth : 360, bgcolor : '#36BA98', color : 'white'}}>
             <CardHeader sx={{color : 'white'}}
-                avatar = {<Avatar src="./login.jpg"/>}
+                avatar = {<FavoriteIcon/>}
                 action={
                     <IconButton aria-label="settings">
                       <MoreVertIcon />

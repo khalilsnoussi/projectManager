@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import LoginPage from './LoginPage';
-import Home from './Home';
 import Card from './MyCard';
 import Navbar from './Navbar';
 import svgImg from './image.svg';
 import FormDialog from './FormDialog';
+import Home from './Home';
 
 
 
