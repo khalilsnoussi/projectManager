@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const userRoutes = require('./routes/user');
+require('dotenv').config();
+
+console.log('JWT_SECRET:', process.env.JWT_SECRET); // Debug log
 
 const app = express();
 const PORT = process.env.PORT || 5000;

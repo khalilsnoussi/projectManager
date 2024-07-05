@@ -1,19 +1,36 @@
 import React, { useState } from 'react';
-import { Container, Box, TextField, Button, Typography, Avatar, CssBaseline, Grid, Link } from '@mui/material';
+import { Container, Box, TextField, Button, Typography, Avatar, CssBaseline, Grid, Link, Alert } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const theme = createTheme();
 
 const LoginPage = ({handleClickOpenSignup}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle login logic here
-    console.log('Email:', email);
-    console.log('Password:', password);
+    setLoading(true);
+    setError('')
+    try{
+    const response  = await axios.post('http://localhost:5000/api/users/login', {email, password});
+    const {token} = response.data;
+    localStorage.setItem('token', token);
+
+    //handle successful login here (store token, redirect user)
+    navigate('/dashboard');
+    }catch(err){
+      setError('Invalid email or password');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,6 +51,7 @@ const LoginPage = ({handleClickOpenSignup}) => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          {error && <Alert severity = "error">{error}</Alert>}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
@@ -46,6 +64,7 @@ const LoginPage = ({handleClickOpenSignup}) => {
               autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled = {loading}
             />
             <TextField
               margin="normal"
@@ -58,6 +77,7 @@ const LoginPage = ({handleClickOpenSignup}) => {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled = {loading}
             />
             <Button
               type="submit"
