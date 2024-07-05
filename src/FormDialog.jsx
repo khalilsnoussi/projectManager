@@ -10,23 +10,29 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Box from '@mui/material/Box';
-
+import axios from "axios";
+import dayjs from "dayjs";
 
 
 export default function FormDialog({open, handleClose}) {
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(dayjs());
+    const [activity, setActivity] = useState('');
+    const handleSubmit = () => {
+    }
+
+
     return(
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>{"Programmer une tache"}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    choisir la tache ainsi que la date.
+                    Choisir la tache ainsi que la date.
                 </DialogContentText>
                 <TextField/>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Box>
                         <DatePicker
-                            label="Select Date"
+                            label="choisir une date"
                             value={selectedDate}
                             onChange={(newValue) => setSelectedDate(newValue)}
                             renderInput={(params) => <TextField {...params} />}
