@@ -15,7 +15,7 @@ export default function SignupDialog({openSignup, handleCloseSignup}){
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/signup', { username, email, password });
+      const response = await axios.post('http://localhost:5000/api/users/signup', { username, email, password });
       console.log(response.data);
       handleCloseSignup();
     } catch (error) {
