@@ -43,6 +43,7 @@ export default function Home() {
         if (token) {
             const decoded = jwtDecode(token);
             const userId = decoded.user.id;
+            console.log(userId);
 
             try {
                 const response = await axios.post(`http://127.0.0.1:5000/api/users/${userId}/events`, newEvent, {
