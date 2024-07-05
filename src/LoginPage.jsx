@@ -21,7 +21,8 @@ const LoginPage = ({handleClickOpenSignup}) => {
     setError('')
     try{
     const response  = await axios.post('http://localhost:5000/api/users/login', {email, password});
-    console.log(response.data);
+    const {token} = response.data;
+    localStorage.setItem('token', token);
 
     //handle successful login here (store token, redirect user)
     navigate('/dashboard');
