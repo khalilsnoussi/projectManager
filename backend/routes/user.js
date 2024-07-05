@@ -9,7 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 
 
-console.log('JWT_SECRET:', JWT_SECRET); // Debug log
+
 
 // Middleware to verify token
 const auth = (req, res, next) => {
@@ -43,8 +43,8 @@ router.post('/signup', async (req, res) => {
       password,
     });
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
+    ///const salt = await bcrypt.genSalt(10);
+    //user.password = await bcrypt.hash(password, salt);
 
     await user.save();
 
@@ -98,7 +98,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Add an event
-router.post('/users/:userId/events', auth, async (req, res) => {
+router.post('/:userId/events', auth, async (req, res) => {
   const { userId } = req.params;
   const { title, start, end } = req.body;
 
@@ -120,7 +120,7 @@ router.post('/users/:userId/events', auth, async (req, res) => {
 });
 
 // Get events
-router.get('/users/:userId/events', auth, async (req, res) => {
+router.get('/:userId/events', auth, async (req, res) => {
   const { userId } = req.params;
 
   try {
