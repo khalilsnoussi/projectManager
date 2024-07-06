@@ -7,12 +7,13 @@ import Chart from './Chart';
 import svgImg from './image.svg';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-
-
+import MyCardtaskComponent  from './Component/taskComponent' ; 
 export default function Home() {
     const [completedTasks, setCompletedTasks] = useState(7); // Example value
     const [totalTasks, setTotalTasks] = useState(10); // Example value
     const [events, setEvents] = useState([]);
+
+    const [allEvents , setAllEvents] =  useState([]);
     
 
     useEffect(() => {
@@ -36,6 +37,7 @@ export default function Home() {
         };
 
         fetchEvents();
+        fetchAllEvents();
     }, []);
 
     const handleAddEvent = async (newEvent) => {
@@ -57,6 +59,25 @@ export default function Home() {
             }
         }
     };
+
+    const fetchAllEvents = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+                    const decoded = jwtDecode(token);
+                    const userId = decoded.user.id;
+                try { 
+                const response = await axios.get(`http://127.0.0.1:5000/api/users/${userId}/events` , {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("here is data ",response.data) 
+                setAllEvents(response.data);
+                } catch (error) {
+                console.error("Erroro :",error);
+        }
+            }
+      }; 
 
     return (
         <Box sx={{ padding: 2 }}>
@@ -95,8 +116,11 @@ export default function Home() {
                             <NoteIcon fontSize='large' />
                             <Typography variant='h6' sx={{ fontWeight: 'bold', marginLeft: '10px' }}>
                                 Tâches
+                                <MyCardtaskComponent allEvents={allEvents} />
+                                <Divider />
                             </Typography>
                         </Box>
+
                         <Box sx={{ marginBottom: 2 }}>
                             <Chart completedTasks={completedTasks} totalTasks={totalTasks} />
                         </Box>

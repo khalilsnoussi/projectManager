@@ -7,10 +7,6 @@ require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
-
-
-
 // Middleware to verify token
 const auth = (req, res, next) => {
   const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
@@ -64,6 +60,10 @@ router.post('/signup', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+
+
+
 
 // Login route
 router.post('/login', async (req, res) => {
