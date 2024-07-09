@@ -27,7 +27,7 @@ const LoginPage = ({handleClickOpenSignup}) => {
     //handle successful login here (store token, redirect user)
     navigate('/dashboard');
     }catch(err){
-      setError('Invalid email or password');
+      setError(error.response?.data?.message || "An error occurred during login");
     } finally {
       setLoading(false);
     }

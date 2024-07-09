@@ -7,15 +7,15 @@ import Chart from './Chart';
 import svgImg from './image.svg';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import MyCardtaskComponent  from './Component/taskComponent' ; 
+import MyCardtaskComponent  from './Component/taskComponent' ;  
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 export default function Home() {
     const [completedTasks, setCompletedTasks] = useState(7); // Example value
     const [totalTasks, setTotalTasks] = useState(10); // Example value
     const [events, setEvents] = useState([]);
 
     const [allEvents , setAllEvents] =  useState([]);
-    
-
     useEffect(() => {
         const fetchEvents = async () => {
             const token = localStorage.getItem('token');
@@ -37,7 +37,6 @@ export default function Home() {
         };
 
         fetchEvents();
-        fetchAllEvents();
     }, []);
 
     const handleAddEvent = async (newEvent) => {
@@ -84,9 +83,7 @@ export default function Home() {
             <Grid container spacing={6}>
                 {/* Sidebar */}
                 <Grid item xs={12} md={3} lg={3}>
-                    <Box sx={{ textAlign: 'center' }}>
-                        <img src={svgImg} alt='illustration' style={{ width: '100%', height: 'auto' }} />
-                    </Box>
+                    
                 </Grid>
 
                 {/* Main Content */}
@@ -110,23 +107,13 @@ export default function Home() {
                 </Grid>
 
                 {/* Todo Bar */}
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={3} sx={{ height: '100%' }}>
                     <Box sx={{ background: 'white', padding: '5px', borderRadius: 1 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
-                            <NoteIcon fontSize='large' />
-                            <Typography variant='h6' sx={{ fontWeight: 'bold', marginLeft: '10px' }}>
-                                Tâches
-                                <MyCardtaskComponent allEvents={allEvents} />
-                                <Divider />
-                            </Typography>
+                            Taches courante
                         </Box>
-
-                        <Box sx={{ marginBottom: 2 }}>
-                            <Chart completedTasks={completedTasks} totalTasks={totalTasks} />
-                        </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 2 }}>
-                            <MyCard />
-                            <MyCard />
+                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <MyCardtaskComponent allEvents={events} />
                         </Box>
                     </Box>
                 </Grid>
