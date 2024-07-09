@@ -33,28 +33,31 @@ const MyCardtaskComponent = ({ allEvents }) => {
         newEvent.start = formatDate(newEvent.start); // Format the start date
         newEvent.end =  formatDate(newEvent.end);
         return (
-          <Card key={index} variant="outlined" sx={{
-            maxWidth: 500, 
-            bgcolor: '#bc4749', 
-            color: 'white', 
-            marginBottom: 1,
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', // Base shadow
-            '&:hover': {
-              boxShadow: '-5px -5px 5px rgba(0.5, 0.5, 0.5, 0.5)', // Hover shadow
-            }
-          }}>
-            <CardHeader sx={{ color: 'white' }}
-              avatar={<FavoriteIcon />}
-              action={
-                <IconButton aria-label="settings" onClick={handleSettingsClick}>
-                  <MoreVertIcon />
-                </IconButton>
+          <div>
+            <Card key={index} variant="outlined" sx={{
+              maxWidth: 500, 
+              bgcolor: '#bc4749', 
+              color: 'white', 
+              height:"100%",
+              marginBottom: 1,
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', // Base shadow
+              '&:hover': {
+                boxShadow: '-5px -5px 5px rgba(0.5, 0.5, 0.5, 0.5)', // Hover shadow
               }
-              title={newEvent.title}
-              subheader={newEvent.start+"|"+newEvent.end}
-              subheaderTypographyProps={{ style: { color: 'white' } }}
-            />
-          </Card>
+            }}>
+              <CardHeader sx={{ color: 'white' }}
+                avatar={<FavoriteIcon />}
+                action={
+                  <IconButton aria-label="settings" onClick={handleSettingsClick}>
+                    <MoreVertIcon />
+                  </IconButton>
+                }
+                title={newEvent.title}
+                subheader={newEvent.start+"|"+newEvent.end}
+                subheaderTypographyProps={{ style: { color: 'white' } }}
+              />
+            </Card>
+          </div>
         );
       })}
             <Popover
