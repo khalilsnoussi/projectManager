@@ -25,7 +25,9 @@ const auth = (req, res, next) => {
 
 // Sign up route
 router.post('/signup', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { username, email, password } = req.body;
+  console.log("name variable : " , username)
+  console.log("eamil variable : " , email)
 
   try {
     let user = await User.findOne({ email });
@@ -34,7 +36,7 @@ router.post('/signup', async (req, res) => {
     }
 
     user = new User({
-      name,
+      username,
       email,
       password,
     });
@@ -61,8 +63,24 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-
-
+//get all events for each user 
+router.get('/:userId/allUsersEvents', auth, async (req, res) => {
+  const { userId } = req.params;
+  console.log("here")
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    const users = await User.find().populate('events').populate('finishedEvents');
+    console.log(users)
+    return res.status(200).json(users);
+  } catch (err) {
+    
+    console.error(err.message);
+    return res.status(500).send('Serverrr error');
+  }
+});
 
 
 // Login route
@@ -101,39 +119,102 @@ router.post('/login', async (req, res) => {
 router.post('/:userId/events', auth, async (req, res) => {
   const { userId } = req.params;
   const { title, start, end } = req.body;
-
   try {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
-
     const newEvent = { title, start, end };
     user.events.push(newEvent);
     await user.save();
-
-    res.status(201).json(user.events);
+    // Filter out events that are already in finishedEvents
+    const events_filtered = user.events.filter(event => 
+      !user.finishedEvents.some(finishedEvent => finishedEvent.taskId === event._id.toString())
+      && !user.finishedEvents.includes(event._id.toString())
+    );
+    res.status(201).json(events_filtered);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 });
 
+// Add a finishedEvent 
+router.post('/:userId/finishedEvents', auth, async (req, res) => {
+  const { userId } = req.params;
+  const { taskId, month } = req.body
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: 'Akram yaw User not found' });
+    }
+    // Check if finishedEvents field exists, if not, add it
+    if (!user.finishedEvents) {
+      user.finishedEvents = [];
+    }
+    const newFinishedEvent = { taskId ,  month};
+    user.finishedEvents.push(newFinishedEvent);
+    await user.save();
+    res.status(201).json(user.finishedEvents);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Error adding finished event');
+  }
+});
+
 // Get events
 router.get('/:userId/events', auth, async (req, res) => {
   const { userId } = req.params;
-
   try {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
-
-    res.status(200).json(user.events);
+    // Filter out events that are already in finishedEvents
+    const events_filtered = user.events.filter(event => {
+      return !user.finishedEvents.some(finishedEvent => finishedEvent.taskId === event._id.toString());
+      });
+    res.status(200).json(events_filtered);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
+});
+
+router.get('/:userId/finishedEvents' , auth , async (req , res)=> {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const finishedEventIds = user.finishedEvents.map(finishedEvent => finishedEvent.taskId);
+    const finishedEvents = user.events.filter(event => finishedEventIds.includes(event._id.toString()));
+    res.json(finishedEvents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  } 
+})
+
+router.post('/:userId/delete-event', (req, res) => {
+  const eventId = req.body.eventId; // Get the event ID from the request body
+  const userId = req.body.userId; // Get the user ID from the request body
+
+  // Find the user document and pull the event from the events array
+  User.findOneAndUpdate(
+    { _id: userId },
+    { $pull: { events: { _id: eventId } } },
+    { safe: true, multi: true },
+    (err, user) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error deleting event');
+      } else {
+        res.send(`Event deleted successfully`);
+      }
+    } 
+  );
 });
 
 module.exports = router;

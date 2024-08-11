@@ -1,3 +1,4 @@
+const { type } = require('@testing-library/user-event/dist/type');
 const mongoose = require('mongoose');
 
 
@@ -8,12 +9,35 @@ const EventSchema = new mongoose.Schema({
   end: {type: Date, required:true}
 });
 
+const FinishedEventsSchema = new mongoose.Schema({
+  taskId : {type: String , required: true} , 
+  month : {type: String , required:false} , 
+  completedTask_onTime:{type:String , required:false} , 
+  completedTask_lateFinished : {type:String , required:false} ,
+  
+})
+
 const UserSchema = new mongoose.Schema({
-  name: String,
-  email: String,
+  username: {type: String , required: true} , 
+  email: {type: String , required: true} , 
   password: String,
-  events : [EventSchema]
+  events : [EventSchema], 
+  finishedEvents : [FinishedEventsSchema]
 });
 
+
+const MonthStats = new mongoose.Schema({
+  monthNumber:{type: String , required:true} , 
+  yearNumber :{type: String , required:true} , 
+  numberofCompletedTasksOntime:{type:Number , required:true} , 
+  numberofNoneCompletedTasks:{type:Number , required:true} ,
+  numberofNoneCompletedLateTasks:{type:Number , required:true} , 
+});
+
+const StatSchema = new mongoose.Schema({
+  userId:{type: String , required:true} , 
+  stats:[MonthStats] 
+ 
+})
 
 module.exports = mongoose.model('User', UserSchema);
