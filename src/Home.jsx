@@ -8,6 +8,7 @@ import  MyFinishedTaskComponent from "./Component/dataInfo" ;
 import BarsDataset from './Component/stats';
 import { MessageLeft, MessageRight } from "./Component/ChatBox";
 import { yellow } from '@mui/material/colors';
+import UsersTasksTable from './Component/usersTasksTable';
 export default function Home() {
     const [completedTasks, setCompletedTasks] = useState([]); // Example value
     const [totalTasks, setTotalTasks] = useState(10); // Example value
@@ -36,7 +37,6 @@ export default function Home() {
                 }
             }
         };
-
         const fecthFinishedEvents = async () => {
             const token = localStorage.getItem('token');
             if (token) {
@@ -71,7 +71,9 @@ export default function Home() {
                 if (response.status === 200) {
 
                   setAllUsersTask(response.data); // Update the state
+                 
                   const Events = buildAllEventsdata(allUsersTask) ; 
+                  console.log("All returned Events " ,Events)
                   setAllUsersEvents(Events) ; 
                 }
               } catch (error) {
@@ -104,21 +106,23 @@ export default function Home() {
         }
     };
 
-    const buildAllEventsdata  = (data) => {
-        const allDataUsers = []
+    const buildAllEventsdata = (data) => {
+        const allDataUsers = [];
+        console.log("data " , data)
         data.forEach((user) => {
-            if (user.events.length > 0) {
-              user.events.forEach((event) => {
-                allDataUsers.push({
-                  title: event.title,
-                  start: event.start,
-                  end: event.end,
-                  _id: event._id,
+            if (user.events && Array.isArray(user.events) && user.events.length > 0) {
+                user.events.forEach((event) => {
+                    allDataUsers.push({
+                        title: user.username + " s'occupe de " + event.title,
+                        start: event.start,
+                        end: event.end,
+                        _id: event._id,
+                    });
                 });
-              });
             }
-          });
-          return allDataUsers ; 
+        });
+        console.log("here is the retturned value " , allDataUsers)
+        return allDataUsers;
     }
 
     const fetchAllEvents = async () => {
@@ -148,10 +152,7 @@ export default function Home() {
                 {/* Sidebar */}
                 <Grid item xs={12} md={3} sx={{ height: '100%' }}>
                             <Box sx={{
-                                left: 0,              // Align to the left
-                                background: 'white',  // Background color
-                                padding: '5px',       // Padding
-                                borderRadius: 1,      // Border radius
+                              background: 'white', padding: '5px', borderRadius: 1 , boxShadow: '0 0 20px rgba(0, 0, 0, 0.4)',  elevation: 6
                             }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
                                     <Typography>Statistiques</Typography>
@@ -164,13 +165,10 @@ export default function Home() {
                             </Box>
                             <br />
                             <Box sx={{
-                                left: 0,         
-                                background: 'white',  
-                                padding: '5px',       
-                                borderRadius: 1      
+                              background: 'white', padding: '5px', borderRadius: 1 , boxShadow: '0 0 20px rgba(0, 0, 0, 0.4)',  elevation: 6
                             }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
-                                    <Typography>Details des taches</Typography>
+                                    <Typography>Diagramme des taches</Typography>
                                 </Box>
                             </Box>
                     </Grid>
@@ -178,8 +176,8 @@ export default function Home() {
                 {/* Main Content */}
                 <Grid item xs={12} md={6}>  
                     <Card sx={{ color: 'black', background: 'white'}}>
-                        <CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Box sx= {{ background: '#dee2e6', padding: '5px', borderRadius: 1 , boxShadow: '0 0 20px rgba(0, 0, 0, 0.4)',  elevation: 6 }} >
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' ,  }}>
                                 <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
                                     Calendrier
                                 </Typography>
@@ -190,14 +188,14 @@ export default function Home() {
                             <Box sx={{ width: '100%', height: '100%' }}>
                                 <MyCalendar events={allUsersEvents} onAddEvent={handleAddEvent} />
                             </Box>
-                        </CardContent>
+                        </Box>
                     </Card>
                 </Grid>
 
                 {/* Todo Bar */}
                 <Grid item xs={12} md={2} sx={{ height: '100%'  , justifyContent: 'flex-end' }}>
-                    <Box sx={{ background: 'white', padding: '5px', borderRadius: 1 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+                    <Box sx={{ background: 'white', padding: '5px', borderRadius: 1 , boxShadow: '0 0 20px rgba(0, 0, 0, 0.4)',  elevation: 6 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             Taches courante
                         </Box>
                         <Divider/>
@@ -207,7 +205,7 @@ export default function Home() {
                         </Box>
                     </Box>
                         <br />
-                    <Box sx={{ background: 'white', padding: '5px', borderRadius: 1 }}>
+                    <Box sx={{ background: 'white', padding: '5px', borderRadius: 1 , boxShadow: '0 0 20px rgba(0, 0, 0, 0.4)',  elevation: 6  }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
                             Taches Effectuer
                         </Box>
@@ -219,11 +217,11 @@ export default function Home() {
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={12} sx={{ height: '100%', justifyContent: 'center', textAlign: 'center' }}>
-                    <Box sx={{ background: 'white', padding: '5px', borderRadius: 1 }}>
+                    <Box sx={{ background: 'white', padding: '5px', borderRadius: 1 , boxShadow: '0 0 20px rgba(0, 0, 0, 0.4)',  elevation: 6  }}>
                         <p>Messagerie</p>
                         <Divider/>
                         <br />   
-                        <MessageLeft
+                        {/* <MessageLeft
             message="Nik mok  dir task dyalk "
             timestamp="MM/DD 00:00" 
             photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
@@ -250,7 +248,10 @@ export default function Home() {
             photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
             displayName="Carlo"
             avatarDisp={false}
-          />
+          /> */}
+               <UsersTasksTable>
+
+               </UsersTasksTable>
                     </Box>
                 </Grid>
             </Grid>

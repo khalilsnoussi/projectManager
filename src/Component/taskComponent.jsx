@@ -148,7 +148,7 @@ const getDateColor = (dateDiff) => {
   if (dateDiff < 86400000) { // less than 1 day
     return '#ff0000'; // red
   } else if (dateDiff < 604800000) { // less than 1 week
-    return '#ff9900'; // orange
+    return '#ff8fa3'; // orange
   } else {
     return '#a2d2ff'; // blue
   }
@@ -157,8 +157,8 @@ const getDateColor = (dateDiff) => {
 const getTextColor = (color) => {
   if (color === '#ff0000') {
     return "white";
-  } else if (color === '#ff9900') {
-    return "#ffbe0b"; 
+  } else if (color === '#ff8fa3') {
+    return "white"; 
   } else {
     return "#f26419"; 
   }
