@@ -50,7 +50,6 @@ function App() {
           path='/dashboard'
           element={
             <>
-              <Navbar handleClickOpen={handleClickOpen} />
               <Home />
               <FormDialog open={open} handleClose={handleClickClose} />
             </>

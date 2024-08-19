@@ -20,10 +20,11 @@ const FinishedEventsSchema = new mongoose.Schema({
 const UserSchema = new mongoose.Schema({
   username: {type: String , required: true} , 
   email: {type: String , required: true} , 
+  profilePic:{type:String , required:true} , 
   password: String,
   events : [EventSchema], 
   finishedEvents : [FinishedEventsSchema]
-});
+}, {timestamps:true} );
 
 
 const MonthStats = new mongoose.Schema({

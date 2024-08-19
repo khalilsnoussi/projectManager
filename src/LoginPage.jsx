@@ -14,7 +14,7 @@ const LoginPage = ({handleClickOpenSignup}) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); // Initialize useNavigate hook
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -94,7 +94,7 @@ const LoginPage = ({handleClickOpenSignup}) => {
                 </Link>
               </Grid>
               <Grid item>
-                <Button variant='contained' onClick={handleClickOpenSignup}>
+                <Button variant='contained' onClick={handleClickOpenSignup}  >
                   SignUp
                 </Button>
               </Grid>

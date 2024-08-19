@@ -19,26 +19,25 @@ const auth = (req, res, next) => {
     req.user = decoded.user;
     next();
   } catch (err) {
-    res.status(401).json({ msg: 'Token is not valid' });
+    res.status(401).json({ msg:  'Token is not valid' });
   }
 };
 
 // Sign up route
 router.post('/signup', async (req, res) => {
   const { username, email, password } = req.body;
-  console.log("name variable : " , username)
-  console.log("eamil variable : " , email)
-
   try {
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ msg: 'User already exists' });
     }
 
+    const boyrofilePicture = `https://avatar.iran.liara.run/public/boy?username={username}`
     user = new User({
       username,
       email,
       password,
+      profilePic: boyrofilePicture
     });
 
     ///const salt = await bcrypt.genSalt(10);
@@ -54,7 +53,7 @@ router.post('/signup', async (req, res) => {
 
     jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
       if (err) throw err;
-      res.status(201).json({ token });
+      res.status(201).json({ token }); 
     });
 
   } catch (err) {
@@ -66,14 +65,12 @@ router.post('/signup', async (req, res) => {
 //get all events for each user 
 router.get('/:userId/allUsersEvents', auth, async (req, res) => {
   const { userId } = req.params;
-  console.log("here")
   try {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
     const users = await User.find().populate('events').populate('finishedEvents');
-    console.log(users)
     return res.status(200).json(users);
   } catch (err) {
     
@@ -83,6 +80,20 @@ router.get('/:userId/allUsersEvents', auth, async (req, res) => {
 });
 
 
+// get all user information
+router.post("/:userId/AllUserInformation" , auth , async (req , res)=>{
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    const users = await User.find().populate('username').populate("profilePic");
+    res.json(users)
+  } catch (error) {
+    console.error("there is an error with users.. ")
+  }
+})
 // Login route
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -181,6 +192,26 @@ router.get('/:userId/events', auth, async (req, res) => {
   }
 });
 
+
+router.get('/:userId/userInformations' , auth , async (req , res)=>{
+  const {userId}= req.params ; 
+  try{
+    const user = await User.findById(userId); 
+    if(!user){
+      return res.status(404).json({msg:'User not found'}) ; 
+
+    }
+    const userInformation_name = user.username
+    const userInformation_urlpicture = user.profilePic
+    console.log("here is some data about your   ")
+    res.json({username:userInformation_name , imageUrl: userInformation_urlpicture })
+  }
+  catch(err){
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+})
+
 router.get('/:userId/finishedEvents' , auth , async (req , res)=> {
   const { userId } = req.params;
   try {
@@ -215,6 +246,7 @@ router.post('/:userId/delete-event', (req, res) => {
       }
     } 
   );
-});
+});q
+
 
 module.exports = router;
